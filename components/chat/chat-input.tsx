@@ -46,6 +46,8 @@ export const ChatInput = ({ apiUrl, query, name, type }: ChatInputProps) => {
 
       await axios.post(url, values);
 
+      //   console.log(values);
+
       form.reset();
       router.refresh();
     } catch (error) {
@@ -78,6 +80,13 @@ export const ChatInput = ({ apiUrl, query, name, type }: ChatInputProps) => {
                     }`}
                     {...field}
                   />
+                  {/* <div className="absolute top-7 right-8">
+                    <EmojiPicker
+                      onChange={(emoji: string) =>
+                        field.onChange(`${field.value} ${emoji}`)
+                      }
+                    />
+                  </div> */}
                 </div>
               </FormControl>
             </FormItem>
