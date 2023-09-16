@@ -28,7 +28,7 @@ export default async function handler(
     }
 
     if (!channelId) {
-      res.status(400).json({ error: 'Channel ID missing' });
+      return res.status(400).json({ error: 'Channel ID missing' });
     }
 
     const server = await db.server.findFirst({
@@ -92,7 +92,7 @@ export default async function handler(
     const canModify = isMessageOwner || isAdmin || isModerator;
 
     if (!canModify) {
-      res.status(401).json({ error: 'Unauthorized' });
+      return res.status(401).json({ error: 'Unauthorized' });
     }
 
     if (req.method === 'DELETE') {
@@ -103,6 +103,7 @@ export default async function handler(
         data: {
           fileUrl: null,
           content: 'This message has been deleted.',
+          deleted: true,
         },
         include: {
           member: {
@@ -135,13 +136,14 @@ export default async function handler(
         },
       });
     }
+
     const updateKey = `chat:${channelId}:messages:update`;
 
     res?.socket?.server?.io?.emit(updateKey, message);
 
     return res.status(200).json(message);
   } catch (error) {
-    console.log('MESSAGE_ID', error);
-    return res.status(500).json({ error: 'Interval Error' });
+    console.log('[MESSAGE_ID]', error);
+    return res.status(500).json({ error: 'Internal Error' });
   }
 }
