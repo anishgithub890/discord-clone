@@ -12,10 +12,10 @@ import Image from 'next/image';
 import { useRouter, useParams } from 'next/navigation';
 
 import { useModal } from '@/hooks/use-modal-store';
+import { cn } from '@/lib/utils';
 
 import { UserAvatar } from '@/components/user-avatar';
 import { ActionTooltip } from '@/components/action-tooltip';
-import { cn } from '@/lib/utils';
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -111,7 +111,7 @@ export const ChatItem = ({
     form.reset({
       content: content,
     });
-  }, [content]);
+  }, [content, form]);
 
   const fileType = fileUrl?.split('.').pop();
 
