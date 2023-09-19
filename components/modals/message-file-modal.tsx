@@ -1,11 +1,10 @@
-'use client';
+"use client";
 
-import qs from 'query-string';
-import axios from 'axios';
-import * as z from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { useRouter } from 'next/navigation';
+import axios from "axios";
+import qs from "query-string";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 
 import {
   Dialog,
@@ -14,45 +13,49 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-
-import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
-import { Button } from '@/components/ui/button';
-import { FileUpload } from '@/components/file-upload';
-
-import { useModal } from '@/hooks/use-modal-store';
+} from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+} from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+import { FileUpload } from "@/components/file-upload";
+import { useRouter } from "next/navigation";
+import { useModal } from "@/hooks/use-modal-store";
 
 const formSchema = z.object({
   fileUrl: z.string().min(1, {
-    message: 'Attachment is required.',
-  }),
+    message: "Attachment is required."
+  })
 });
 
 export const MessageFileModal = () => {
   const { isOpen, onClose, type, data } = useModal();
-
   const router = useRouter();
-  const isModalOpen = isOpen && type === 'messageFile';
+
+  const isModalOpen = isOpen && type === "messageFile";
   const { apiUrl, query } = data;
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      fileUrl: '',
-    },
+      fileUrl: "",
+    }
   });
 
   const handleClose = () => {
     form.reset();
     onClose();
-  };
+  }
 
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const url = qs.stringifyUrl({
-        url: apiUrl || '',
+        url: apiUrl || "",
         query,
       });
 
@@ -60,13 +63,14 @@ export const MessageFileModal = () => {
         ...values,
         content: values.fileUrl,
       });
+
       form.reset();
       router.refresh();
       handleClose();
     } catch (error) {
       console.log(error);
     }
-  };
+  }
 
   return (
     <Dialog open={isModalOpen} onOpenChange={handleClose}>
@@ -101,7 +105,7 @@ export const MessageFileModal = () => {
               </div>
             </div>
             <DialogFooter className="bg-gray-100 px-6 py-4">
-              <Button disabled={isLoading} variant="primary" className="">
+              <Button variant="primary" disabled={isLoading}>
                 Send
               </Button>
             </DialogFooter>
@@ -109,5 +113,5 @@ export const MessageFileModal = () => {
         </Form>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}
